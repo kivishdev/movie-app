@@ -25,6 +25,9 @@ node server.js
 cd movie-app-frontend
 npm install
 
+Create a .env file:
+VITE_API_URL=Your-Backend-PORT (For ex: http://localhost:5000)
+
 Run Client:
 npm run dev
 
