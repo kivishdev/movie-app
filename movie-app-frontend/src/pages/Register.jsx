@@ -11,7 +11,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('https://movie-app-ifv0.onrender.com/auth/register', formData);
+            await axios.post(`${import.meta.env.VITE_API_URL}/auth/register`, formData);
             alert('Registration Successful! Please Login.');
             navigate('/login');
         } catch (err) {

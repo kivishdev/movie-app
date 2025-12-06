@@ -2,6 +2,7 @@ Dependenciesz:
 node_modules/
 dist/
 build/
+movie-app-frontend/.env
 
 Environment Variables
 .env

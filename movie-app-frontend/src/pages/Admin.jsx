@@ -17,7 +17,7 @@ const Admin = () => {
         try {
             // Admin panel mein hum saari movies chahte hain bina pagination ke ideally,
             // lekin agar backend paginate kar raha hai, toh hum limit badha kar maang sakte hain
-            const { data } = await axios.get('https://movie-app-ifv0.onrender.com/movies?limit=1000'); 
+            const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/movies?limit=1000`); 
             
             // FIX: Handle new backend response structure { movies: [...], totalPages: ... }
             if (data.movies && Array.isArray(data.movies)) {
@@ -45,14 +45,14 @@ const Admin = () => {
         try {
             if (editingId) {
                 // --- PUT Request (Update) ---
-                await axios.put(`https://movie-app-ifv0.onrender.com/${editingId}`, formData, {
+                await axios.put(`${import.meta.env.VITE_API_URL}/${editingId}`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert('Movie Updated Successfully!');
                 setEditingId(null); 
             } else {
                 // --- POST Request (Add New) ---
-                await axios.post('https://movie-app-ifv0.onrender.com/movies', formData, {
+                await axios.post(`${import.meta.env.VITE_API_URL}/movies`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert('Movie Added Successfully!');
@@ -71,7 +71,7 @@ const Admin = () => {
     const handleDelete = async (id) => {
         if (!confirm('Are you sure you want to delete this movie?')) return;
         try {
-            await axios.delete(`https://movie-app-ifv0.onrender.com/movies/${id}`, {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/movies/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchMovies();

@@ -31,14 +31,14 @@ const Home = () => {
         const fetchMovies = async () => {
             setLoading(true);
             try {
-                let url = `https://movie-app-ifv0.onrender.com/movies?page=${page}&limit=${moviesPerPage}`;
+                let url = `${import.meta.env.VITE_API_URL}/movies?page=${page}&limit=${moviesPerPage}`;
                 
                 if (search) {
-                    url = `https://movie-app-ifv0.onrender.com/movies/search?q=${search}&page=${page}&limit=${moviesPerPage}`;
+                    url = `${import.meta.env.VITE_API_URL}/movies/search?q=${search}&page=${page}&limit=${moviesPerPage}`;
                 } else if (sortBy) {
-                    url = `https://movie-app-ifv0.onrender.com/movies/sorted?sortBy=${sortBy}&page=${page}&limit=${moviesPerPage}`;
+                    url = `${import.meta.env.VITE_API_URL}/movies/sorted?sortBy=${sortBy}&page=${page}&limit=${moviesPerPage}`;
                 } else if (selectedYear) {
-                    url = `https://movie-app-ifv0.onrender.com/movies/movies/sorted?sortBy=year&page=${page}&limit=${moviesPerPage}`;
+                    url = `${import.meta.env.VITE_API_URL}/movies/movies/sorted?sortBy=year&page=${page}&limit=${moviesPerPage}`;
                 }
                 
                 const { data } = await axios.get(url);
@@ -81,7 +81,7 @@ const Home = () => {
     const handleForceRefresh = async () => {
         setLoading(true);
         try {
-            await axios.get('https://movie-app-ifv0.onrender.com/movies/force-refresh');
+            await axios.get(`${import.meta.env.VITE_API_URL}/movies/force-refresh`);
             window.location.reload(); 
         } catch (error) {
             alert("Refresh failed.",error);
