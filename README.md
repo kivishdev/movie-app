@@ -4,10 +4,10 @@ A production-ready movie database application built with the MERN Stack (MongoDB
 
 🚀 Live Demo:
 Frontend (Vercel): https://movie-fplmyde89-kivishdevs-projects.vercel.app/
+
 Backend (Render): https://movie-app-ifv0.onrender.com
 
 ⚙️ Installation & Setup Guide
-
 1. Backend Setup
 
 cd movie-app-backend
