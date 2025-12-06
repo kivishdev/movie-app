@@ -11,21 +11,29 @@ Backend (Render): https://movie-app-ifv0.onrender.com
 1. Backend Setup
 
 cd movie-app-backend
+
 npm install
 
 Create a .env file:
+
 PORT=5000
+
 MONGO_URI=your_mongodb_connection_string
+
 JWT_SECRET=your_secret_key
 
 Run Server:
+
 node server.js
 
 2. Frontend Setup
+
 cd movie-app-frontend
+
 npm install
 
 Create a .env file:
+
 VITE_API_URL=Your-Backend-PORT (For ex: http://localhost:5000)
 
 Run Client:
