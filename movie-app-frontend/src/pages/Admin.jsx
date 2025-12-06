@@ -15,7 +15,7 @@ const Admin = () => {
 
     const fetchMovies = async () => {
         try {
-            const { data } = await axios.get('http://localhost:5000/movies');
+            const { data } = await axios.get('https://movie-app-ifv0.onrender.com/movies');
             setMovies(data);
         } catch (error) {
             console.error("Error fetching movies", error);
@@ -33,14 +33,14 @@ const Admin = () => {
         try {
             if (editingId) {
                 // --- PUT Request (Update) ---
-                await axios.put(`http://localhost:5000/movies/${editingId}`, formData, {
+                await axios.put(`https://movie-app-ifv0.onrender.com/movies/${editingId}`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert('Movie Updated Successfully!');
                 setEditingId(null); 
             } else {
                 // --- POST Request (Add New) ---
-                await axios.post('http://localhost:5000/movies', formData, {
+                await axios.post('https://movie-app-ifv0.onrender.com/movies', formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert('Movie Added Successfully!');
@@ -59,7 +59,7 @@ const Admin = () => {
     const handleDelete = async (id) => {
         if (!confirm('Are you sure you want to delete this movie?')) return;
         try {
-            await axios.delete(`http://localhost:5000/movies/${id}`, {
+            await axios.delete(`https://movie-app-ifv0.onrender.com/movies/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchMovies();

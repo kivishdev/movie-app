@@ -14,7 +14,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post('http://localhost:5000/auth/login', { email, password });
+            const { data } = await axios.post('https://movie-app-ifv0.onrender.com/auth/login', { email, password });
             login({ username: data.username, role: data.role, id: data._id }, data.token);
             navigate('/'); 
         } catch (err) {
