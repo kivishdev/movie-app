@@ -3,7 +3,7 @@
 A production-ready movie database application built with the MERN Stack (MongoDB, Express, React, Node.js). This app features advanced scraping techniques to fetch authentic data from IMDb's Top 250 chart, robust RBAC authentication, and a scalable architecture.
 
 🚀 Live Demo:
-Frontend (Vercel): https://movie-fplmyde89-kivishdevs-projects.vercel.app/
+Frontend (Vercel): https://movie-app-gules-sigma.vercel.app/
 
 Backend (Render): https://movie-app-ifv0.onrender.com
 
