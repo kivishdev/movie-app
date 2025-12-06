@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext'; // FIX: Import useAuth, NOT AuthContext
+import { useAuth } from '../context/AuthContext';
 import { Container, TextField, Button, Typography, Box, List, ListItem, ListItemText, IconButton, Paper, Grid } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Admin = () => {
-    const { token } = useAuth(); // FIX: Use the hook here
-    const [movies, setMovies] = useState([]);
+    const { token } = useAuth();
+    const [movies, setMovies] = useState([]); // Default empty array to prevent crash
     
     // Form State
     const [formData, setFormData] = useState({ title: '', rating: '', duration: '', description: '', year: '' });
@@ -15,10 +15,22 @@ const Admin = () => {
 
     const fetchMovies = async () => {
         try {
-            const { data } = await axios.get('https://movie-app-ifv0.onrender.com/movies');
-            setMovies(data);
+            // Admin panel mein hum saari movies chahte hain bina pagination ke ideally,
+            // lekin agar backend paginate kar raha hai, toh hum limit badha kar maang sakte hain
+            const { data } = await axios.get('https://movie-app-ifv0.onrender.com/movies?limit=1000'); 
+            
+            // FIX: Handle new backend response structure { movies: [...], totalPages: ... }
+            if (data.movies && Array.isArray(data.movies)) {
+                setMovies(data.movies);
+            } else if (Array.isArray(data)) {
+                setMovies(data); // Fallback for old structure
+            } else {
+                console.error("Unexpected API response format:", data);
+                setMovies([]);
+            }
         } catch (error) {
             console.error("Error fetching movies", error);
+            setMovies([]);
         }
     };
 
@@ -33,7 +45,7 @@ const Admin = () => {
         try {
             if (editingId) {
                 // --- PUT Request (Update) ---
-                await axios.put(`https://movie-app-ifv0.onrender.com/movies/${editingId}`, formData, {
+                await axios.put(`https://movie-app-ifv0.onrender.com/${editingId}`, formData, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 alert('Movie Updated Successfully!');
@@ -99,35 +111,45 @@ const Admin = () => {
                             <TextField 
                                 label="Title" required fullWidth 
                                 value={formData.title} 
-                                onChange={(e) => setFormData({...formData, title: e.target.value})} 
+                                onChange={(e) => setFormData({...formData, title: e.target.value})}
+                                InputLabelProps={{ style: { color: 'gray' } }}
+                                InputProps={{ style: { color: 'white' } }} 
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField 
                                 label="Rating (0-10)" required fullWidth 
                                 value={formData.rating} 
-                                onChange={(e) => setFormData({...formData, rating: e.target.value})} 
+                                onChange={(e) => setFormData({...formData, rating: e.target.value})}
+                                InputLabelProps={{ style: { color: 'gray' } }}
+                                InputProps={{ style: { color: 'white' } }} 
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField 
                                 label="Duration (mins)" type="number" fullWidth 
                                 value={formData.duration} 
-                                onChange={(e) => setFormData({...formData, duration: e.target.value})} 
+                                onChange={(e) => setFormData({...formData, duration: e.target.value})}
+                                InputLabelProps={{ style: { color: 'gray' } }}
+                                InputProps={{ style: { color: 'white' } }} 
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField 
                                 label="Year" fullWidth 
                                 value={formData.year} 
-                                onChange={(e) => setFormData({...formData, year: e.target.value})} 
+                                onChange={(e) => setFormData({...formData, year: e.target.value})}
+                                InputLabelProps={{ style: { color: 'gray' } }}
+                                InputProps={{ style: { color: 'white' } }} 
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField 
                                 label="Description" multiline rows={3} fullWidth 
                                 value={formData.description} 
-                                onChange={(e) => setFormData({...formData, description: e.target.value})} 
+                                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                                InputLabelProps={{ style: { color: 'gray' } }}
+                                InputProps={{ style: { color: 'white' } }} 
                             />
                         </Grid>
                     </Grid>
@@ -151,29 +173,34 @@ const Admin = () => {
 
             {/* --- MOVIE LIST --- */}
             <Typography variant="h5" gutterBottom color="white">Manage Existing Movies</Typography>
-            <Paper sx={{ bgcolor: '#1f1f1f' }}>
+            <Paper sx={{ bgcolor: '#1f1f1f', color: 'white' }}>
                 <List>
-                    {movies.map((movie) => (
-                        <ListItem key={movie._id} divider sx={{ borderColor: '#333' }} secondaryAction={
-                            <Box>
-                                <IconButton color="primary" onClick={() => handleEditClick(movie)} sx={{ mr: 1 }}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton color="error" onClick={() => handleDelete(movie._id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </Box>
-                        }>
-                            <ListItemText 
-                                primary={<Typography variant="h6" color="white">{movie.title}</Typography>} 
-                                secondary={
-                                    <Typography variant="body2" color="gray">
-                                        Rating: {movie.rating} | Year: {movie.year}
-                                    </Typography>
-                                } 
-                            />
-                        </ListItem>
-                    ))}
+                    {/* CRASH FIX: Ensure movies is an array before mapping */}
+                    {Array.isArray(movies) && movies.length > 0 ? (
+                        movies.map((movie) => (
+                            <ListItem key={movie._id} divider sx={{ borderColor: '#333' }} secondaryAction={
+                                <Box>
+                                    <IconButton color="primary" onClick={() => handleEditClick(movie)} sx={{ mr: 1 }}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton color="error" onClick={() => handleDelete(movie._id)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </Box>
+                            }>
+                                <ListItemText 
+                                    primary={<Typography variant="h6" color="white">{movie.title}</Typography>} 
+                                    secondary={
+                                        <Typography variant="body2" color="gray">
+                                            Rating: {movie.rating} | Year: {movie.year}
+                                        </Typography>
+                                    } 
+                                />
+                            </ListItem>
+                        ))
+                    ) : (
+                        <Typography p={3} align="center" color="gray">No movies found.</Typography>
+                    )}
                 </List>
             </Paper>
         </Container>
